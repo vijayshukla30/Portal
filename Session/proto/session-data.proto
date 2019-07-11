@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package sessiondata;
+
+service SessionData{
+    rpc Create(CreateRequest) returns(CreateResponse);
+    rpc Remove(RemoveRequest) returns(RemoveResponse);
+    rpc Update(UpdateRequest) returns(UpdateResponse);
+    rpc Read(ReadRequest) returns (ReadResponse);
+    rpc List(ListRequest) returns(ListResponse);
+    rpc ListByUser(ListByUserRequest) returns(ListResponse);
+    rpc ListByTime(ListByTimeRequest) returns(ListResponse);
+}
+
+message Session{
+    string id=1;
+    string title=2;
+    string desc=3;
+    int64 created=4;
+    int64 updated=5;
+}
+
+message CreateRequest{
+   Session session=1;
+}
+message CreateResponse{
+    string message=1;
+}
+message RemoveRequest{
+    string sessionID=1;
+}
+message RemoveResponse{
+    string message=1;
+}
+message UpdateRequest{
+    Session session=1;
+}
+message UpdateResponse{
+    string message=1;
+}
+message ReadRequest{
+    string sessionId=1;
+}
+message ReadResponse{
+    Session session=1;
+}
+message ListRequest{
+
+}
+message ListResponse{
+    repeated Session sessions=1;
+}
+message ListByUserRequest{
+    string userId=1;
+}
+message ListByTimeRequest{
+    int64 start=1;
+    int64 end=2;
+}
