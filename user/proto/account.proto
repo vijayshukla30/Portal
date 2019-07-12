@@ -24,7 +24,7 @@ service Account {
 }
 
 message User {
-    string id = 1;
+    int64 id = 1;
     string username = 2;
     string firstName=3;
     string lastName=4;
@@ -35,7 +35,7 @@ message User {
     int64 updated = 9;
 }
 message Session {
-    string id = 1;
+    int64 id = 1;
     string username = 2;
     int64 created = 3;
     int64 expires = 4;

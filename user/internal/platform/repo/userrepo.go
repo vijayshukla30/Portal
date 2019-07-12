@@ -3,7 +3,9 @@ package repo
 import (
 	"time"
 
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/micro/go-micro/errors"
 	user "github.com/vijayshukla30/NexthoughtsPortal/user/proto"
 )
 
@@ -19,6 +21,37 @@ func NewDBRepository(driver string, connection string) *UserRepository {
 func (r *UserRepository) CreateUser(user *user.User) (message string, err error) {
 	user.Created = time.Now().Unix()
 	user.Updated = time.Now().Unix()
+
+	db, err := gorm.Open(r.driver, r.connection)
+
+	if err != nil {
+		panic("failed to connect database")
+	}
+	defer db.Close()
+
+	db.AutoMigrate(&User{})
+
+	var newUser = &User{
+		id:        user.Id,
+		username:  user.Username,
+		firstName: user.FirstName,
+		lastName:  user.LastName,
+		mobile:    user.Mobile,
+		dob:       user.Dob,
+		doj:       user.Doj,
+		created:   user.Created,
+		updated:   user.Updated,
+	}
+
+	var checkUser User
+
+	db.First(&checkUser, "username=?", user.Username)
+
+	if checkUser.id == 0 {
+		return "User creation failed", errors.BadRequest("", "User Already Exist")
+	}
+
+	db.Create(newUser)
 
 	return "", nil
 }
