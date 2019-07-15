@@ -2,4 +2,4 @@ package config
 
 var Version = "(undefined)"
 
-const ServiceName = "go.nexthoughts.portal.srv.user"
+const ServiceName = "go.micro.srv.greeter"
