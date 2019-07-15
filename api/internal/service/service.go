@@ -31,36 +31,18 @@ func NewCommerceService(c client.Client) *CommerceService {
 	}
 }
 
-func (cs *CommerceService) Greeting(request *restful.Request, response *restful.Response) {
-	log.Println("?????????????????????")
-	response.WriteEntity(map[string]string{
-		"message": "Success",
-	})
-}
-
 func (cs *CommerceService) CreateUser(request *restful.Request, response *restful.Response) {
 	log.Println("I am inside Create User")
 	usr := &user.User{}
 	err := request.ReadEntity(usr)
-	if err == nil {
-		response.WriteEntity(usr)
-	} else {
+	if err != nil {
 		response.WriteError(http.StatusInternalServerError, err)
+		return
 	}
-
-	/*
-	username := request.PathParameter("username")
-
-	firstName := request.PathParameter("firstName")
-	lastName:= request.PathParameter("lastName")
-
-	fmt.Println("Username " + username)
-	fmt.Println("First Name " + firstName)
-	fmt.Println("Last Name " + lastName)
 
 	ctx := context.Background()
 
-	userCh := cs.createUser(ctx, username, firstName, lastName)
+	userCh := cs.createUser(ctx, usr)
 	userReply := <-userCh
 
 	if userReply.err != nil {
@@ -72,20 +54,15 @@ func (cs *CommerceService) CreateUser(request *restful.Request, response *restfu
 	response.WriteEntity(map[string]string{
 		"message": message,
 	})
-	 */
 
 }
 
-func (cs *CommerceService) createUser(ctx context.Context, username string, firstName string, lastName string) chan userResults {
+func (cs *CommerceService) createUser(ctx context.Context, usr *user.User) chan userResults {
 	ch := make(chan userResults, 1)
 
 	go func() {
 		res, err := cs.userClient.Create(ctx, &user.CreateRequest{
-			User: &user.User{
-				Username:  username,
-				FirstName: firstName,
-				LastName:  lastName,
-			},
+			User: usr,
 		})
 
 		ch <- userResults{

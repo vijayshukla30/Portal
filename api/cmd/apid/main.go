@@ -34,8 +34,6 @@ func main() {
 	ws.Path("/greeter")
 	ws.Route(ws.POST("/users/create").To(handler.CreateUser)).
 		Doc("Create a User")
-	ws.Route(ws.GET("/").To(handler.Greeting)).
-		Doc("Testing")
 
 	wc.Add(ws)
 	webService.Handle("/", wc)
