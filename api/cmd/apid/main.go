@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	serviceName = "go.micro.api.greeter"
+	serviceName = "go.micro.api.rest"
 )
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 		Consumes(restful.MIME_XML, restful.MIME_JSON).
 		Produces(restful.MIME_XML, restful.MIME_JSON)
 	log.Println("API URL")
-	ws.Path("/greeter")
+	ws.Path("/rest")
 	ws.Route(ws.POST("/users/create").To(handler.CreateUser)).
 		Doc("Create a User")
 

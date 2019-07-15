@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	userService = "go.micro.srv.greeter"
+	userService = "go.micro.srv.user"
 )
 
 type CommerceService struct {
