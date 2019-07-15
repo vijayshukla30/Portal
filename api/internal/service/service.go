@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	stderrors "errors"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -41,9 +40,20 @@ func (cs *CommerceService) Greeting(request *restful.Request, response *restful.
 
 func (cs *CommerceService) CreateUser(request *restful.Request, response *restful.Response) {
 	log.Println("I am inside Create User")
-	username, _ := request.BodyParameter("username")
-	firstName, _ := request.BodyParameter("firstName")
-	lastName, _ := request.BodyParameter("lastName")
+	usr := &user.User{}
+	err := request.ReadEntity(usr)
+	if err == nil {
+		response.WriteEntity(usr)
+	} else {
+		response.WriteError(http.StatusInternalServerError, err)
+	}
+
+	/*
+	username := request.PathParameter("username")
+
+	firstName := request.PathParameter("firstName")
+	lastName:= request.PathParameter("lastName")
+
 	fmt.Println("Username " + username)
 	fmt.Println("First Name " + firstName)
 	fmt.Println("Last Name " + lastName)
@@ -62,6 +72,7 @@ func (cs *CommerceService) CreateUser(request *restful.Request, response *restfu
 	response.WriteEntity(map[string]string{
 		"message": message,
 	})
+	 */
 
 }
 
