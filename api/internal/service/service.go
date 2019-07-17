@@ -17,7 +17,7 @@ const (
 )
 
 type CommerceService struct {
-	userClient user.AccountService
+	userService user.AccountService
 }
 
 type userResults struct {
@@ -27,7 +27,7 @@ type userResults struct {
 
 func NewCommerceService(c client.Client) *CommerceService {
 	return &CommerceService{
-		userClient: user.NewAccountService(userService, c),
+		userService: user.NewAccountService(userService, c),
 	}
 }
 
@@ -58,12 +58,18 @@ func (cs *CommerceService) CreateUser(request *restful.Request, response *restfu
 }
 
 func (cs *CommerceService) createUser(ctx context.Context, usr *user.User) chan userResults {
-	ch := make(chan userResults, 1)
-
+	ch := make(chan userResults)
+	log.Println(usr.Username)
 	go func() {
-		res, err := cs.userClient.Create(ctx, &user.CreateRequest{
+		res, err := cs.userService.Create(ctx, &user.CreateRequest{
 			User: usr,
 		})
+		log.Print("Response ")
+		log.Println(res)
+		log.Println("")
+		log.Print("Error ")
+		log.Println(err)
+		log.Println("")
 
 		ch <- userResults{
 			createResponse: res, err: err,

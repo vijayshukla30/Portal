@@ -18,7 +18,7 @@ func NewDBRepository(driver string, connection string) *UserRepository {
 	return &UserRepository{driver: driver, connection: connection}
 }
 
-func (r *UserRepository) CreateUser(user *user.User) (message string, err error) {
+func (r *UserRepository) Create(user *user.User) (message string, err error) {
 	user.Created = time.Now().Unix()
 	user.Updated = time.Now().Unix()
 

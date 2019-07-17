@@ -2,9 +2,10 @@ package service
 
 import (
 	"context"
+	"log"
 
 	"github.com/micro/go-micro/errors"
-	user "github.com/vijayshukla30/NexthoughtsPortal/user/proto"
+	"github.com/vijayshukla30/NexthoughtsPortal/user/proto"
 )
 
 type userService struct {
@@ -12,7 +13,7 @@ type userService struct {
 }
 
 type userRepository interface {
-	CreateUser(user *user.User) (message string, err error)
+	Create(user *user.User) (message string, err error)
 	UpdateUser(user *user.User) (message string, err error)
 	ReadUser(id string) (user *user.User, err error)
 	DeleteUser(id string) (message string, err error)
@@ -24,6 +25,9 @@ func NewUserService(repo userRepository) user.AccountHandler {
 	return &userService{repo: repo}
 }
 func (s *userService) Create(ctx context.Context, request *user.CreateRequest, response *user.CreateResponse) error {
+	log.Println(">>>>>>>>>>>>>>>>>>>>")
+	log.Println(">>>>>>>>>>>>>>>>>>>>")
+
 	if request == nil {
 		return errors.BadRequest("", "Missing User Create Request")
 	}
@@ -35,7 +39,7 @@ func (s *userService) Create(ctx context.Context, request *user.CreateRequest, r
 	if exists {
 		return errors.NotFound(request.User.Username, "User Already exists")
 	}
-	message, err := s.repo.CreateUser(request.User)
+	message, err := s.repo.Create(request.User)
 	if err != nil {
 		return errors.InternalServerError("", "Failed to save new User: %s", err)
 	}
