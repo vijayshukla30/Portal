@@ -3,8 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/micro/go-micro/errors"
 	"github.com/vijayshukla30/NexthoughtsPortal/user/proto"
 )
