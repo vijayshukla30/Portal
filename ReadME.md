@@ -1,8 +1,8 @@
-#User Service
-##Crete a Proto File
+# User Service
+## Crete a Proto File
 user/proto/account.proto
 
-##Generate Go File
+## Generate Go File
 ```
 protoc --proto_path=$GOPATH/src:. --micro_out=. --go_out=. srv/proto/hello.proto
 ```
@@ -11,25 +11,25 @@ protoc --proto_path=$GOPATH/src:. --micro_out=. --go_out=. srv/proto/hello.proto
 user/internal and user/cmd.
 Service Name is go.micro.srv.user
 
-##Run User Service
+## Run User Service
 ```
 cd NexthoughtsPortal
 go run user/cmd/userd/main.go
  ```
-#API
-##Create a Service and Main
+# API
+## Create a Service and Main
 api/internal and user/cmd
 Service Name is go.micro.api.v1.nexthoughts
 
 URL will be http://localhost:8080/v1/nexthoughts/
 
-##Run API Service
+## Run API Service
 ```
 cd NexthoughtsPortal
 go run api/cmd/apid/main.go
 ```
 
-#Run Micro API with HTTP
+# Run Micro API with HTTP
 ```
 micro api --handler=http
 ```
