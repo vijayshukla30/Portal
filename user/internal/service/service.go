@@ -2,10 +2,11 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/micro/go-micro/errors"
-	user "github.com/vijayshukla30/NexthoughtsPortal/user/proto"
+	"github.com/vijayshukla30/NexthoughtsPortal/user/proto"
 )
 
 type UserService struct {
@@ -25,26 +26,19 @@ func NewUserService(repo userRepository) user.AccountHandler {
 	return &UserService{repo: repo}
 }
 func (s *UserService) Create(ctx context.Context, request *user.CreateRequest, response *user.CreateResponse) error {
-	log.Println(">>>>>>>>>>>>>>>>>>>>")
-	log.Println(">>>>>>>>>>>>>>>>>>>>")
-
-	response.Message = "Done"
-
 	if request == nil {
-		return errors.BadRequest("", "Missing User Create Request")
-	}
-	exists, err := s.repo.UserExist(request.User.Username)
-	if err != nil {
-		return errors.InternalServerError("", "Failed to check user existence: %s", err)
+		response.Message = fmt.Sprintf("Request is NIL")
+		return nil
 	}
 
-	if exists {
-		return errors.NotFound(request.User.Username, "User Already exists")
-	}
 	message, err := s.repo.Create(request.User)
+
 	if err != nil {
-		return errors.InternalServerError("", "Failed to save new User: %s", err)
+		realError := errors.Parse(err.Error())
+		response.Message = fmt.Sprintf("Failed to save new User: %s", realError.Detail)
+		return nil
 	}
+
 	response.Message = message
 	return nil
 }

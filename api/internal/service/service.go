@@ -46,31 +46,24 @@ func (cs *CommerceService) CreateUser(request *restful.Request, response *restfu
 	userReply := <-userCh
 
 	if userReply.err != nil {
-		writeError(response, userReply.err)
+		realError := errors.Parse(err.Error())
+		response.WriteEntity(map[string]string{
+			"message": realError.Detail,
+		})
+	} else {
+		message := userReply.createResponse.Message
+		response.WriteEntity(map[string]string{
+			"message": message,
+		})
 	}
-
-	message := userReply.createResponse.Message
-
-	response.WriteEntity(map[string]string{
-		"message": message,
-	})
-
 }
 
 func (cs *CommerceService) createUser(ctx context.Context, usr *user.User) chan userResults {
 	ch := make(chan userResults)
-	log.Println(usr.Username)
 	go func() {
 		res, err := cs.userService.Create(ctx, &user.CreateRequest{
 			User: usr,
 		})
-		log.Print("Response ")
-		log.Println(res)
-		log.Println("")
-		log.Print("Error ")
-		log.Println(err)
-		log.Println("")
-
 		ch <- userResults{
 			createResponse: res, err: err,
 		}
@@ -80,7 +73,6 @@ func (cs *CommerceService) createUser(ctx context.Context, usr *user.User) chan 
 }
 
 func writeError(response *restful.Response, err error) {
-	log.Println("Getting Errors....")
 	realError := errors.Parse(err.Error())
 
 	if realError != nil {
