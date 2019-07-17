@@ -1,12 +1,13 @@
 package repo
 
 import (
+	"github.com/micro/go-micro/errors"
+	"log"
 	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/micro/go-micro/errors"
-	user "github.com/vijayshukla30/NexthoughtsPortal/user/proto"
+	"github.com/vijayshukla30/NexthoughtsPortal/user/proto"
 )
 
 type UserRepository struct {
@@ -31,27 +32,24 @@ func (r *UserRepository) Create(user *user.User) (message string, err error) {
 
 	db.AutoMigrate(&User{})
 
-	var newUser = &User{
-		id:        user.Id,
-		username:  user.Username,
-		firstName: user.FirstName,
-		lastName:  user.LastName,
-		mobile:    user.Mobile,
-		dob:       user.Dob,
-		doj:       user.Doj,
-		created:   user.Created,
-		updated:   user.Updated,
+	var newUser = User{
+		Username:  user.Username,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Mobile:    user.Mobile,
+		Dob:       user.Dob,
+		Doj:       user.Doj,
 	}
 
 	var checkUser User
-
 	db.First(&checkUser, "username=?", user.Username)
 
-	if checkUser.id == 0 {
+	log.Println(checkUser.ID)
+	if checkUser.ID > 0 {
 		return "User creation failed", errors.BadRequest("", "User Already Exist")
 	}
 
-	db.Create(newUser)
+	db.Create(&newUser)
 
 	return "", nil
 }

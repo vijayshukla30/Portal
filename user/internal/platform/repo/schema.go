@@ -6,13 +6,11 @@ import (
 
 type User struct {
 	gorm.Model
-	id        int64
-	username  string
-	firstName string
-	lastName  string
-	mobile    int32
-	dob       int64
-	doj       int64
-	created   int64
-	updated   int64
+	Username  string `gorm:"type:varchar(100);unique_index"`
+	FirstName string
+	LastName  string
+	Mobile    int32
+	Dob       int64
+	Doj       int64
+	Password string
 }
